@@ -18,17 +18,26 @@ export default function App() {
       const taskId = Math.random();
       const newTask = {
         text: text,
-        id: taskId,
         projectId: prevState.selectedProjectId,
+        id: taskId,
       };
+      console.log('prevState',prevState)
       return {
         ...prevState,
         tasks: [newTask, ...prevState.tasks],
       };
     });
+    console.log('state',projectState)
   }
   //Delete task to selected project in Task component
-  function handleDeleteTask() {}
+  function handleDeleteTask(id) {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        tasks: prevState.tasks.filter((task) => task.id !== id),
+      };
+    });
+  }
   //Starting management project for the first time
   function handleStartAddProject() {
     setProjectState((prevState) => {
@@ -78,8 +87,8 @@ export default function App() {
       return {
         ...prevState,
         selectedProjectId: undefined,
-        projects: prevState.projects.filter((project) => project.id != id),
-        // the second solution ==>projects: prevState.projects.filter((project) => project.id != prevState.selectedProjectId),
+        // projects: prevState.projects.filter((project) => project.id != id),
+        projects: prevState.projects.filter((project) => project.id != prevState.selectedProjectId),
       };
     });
   }
