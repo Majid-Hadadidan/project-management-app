@@ -9,8 +9,26 @@ export default function App() {
   const [projectState, setProjectState] = useState({
     selectedProjectId: undefined,
     projects: [],
+    tasks: [],
   });
 
+  //Add task to selected project in NewTAsk component
+  function handleAddTask(text) {
+    setProjectState((prevState) => {
+      const taskId = Math.random();
+      const newTask = {
+        text: text,
+        id: taskId,
+        projectId: prevState.selectedProjectId,
+      };
+      return {
+        ...prevState,
+        tasks: [newTask, ...prevState.tasks],
+      };
+    });
+  }
+  //Delete task to selected project in Task component
+  function handleDeleteTask() {}
   //Starting management project for the first time
   function handleStartAddProject() {
     setProjectState((prevState) => {
@@ -45,7 +63,7 @@ export default function App() {
       };
     });
   }
-  //handle Projectid  if we click on project button
+  //handle Projectid  if we click on project button in ProjectSidebar component
   function handleSelectProject(id) {
     setProjectState((prevState) => {
       return {
@@ -54,10 +72,29 @@ export default function App() {
       };
     });
   }
+  // Delete selected project from SelectedProject component
+  function handleDeleteProject(id) {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter((project) => project.id != id),
+        // the second solution ==>projects: prevState.projects.filter((project) => project.id != prevState.selectedProjectId),
+      };
+    });
+  }
   const selectedProject = projectState.projects.find(
     (project) => project.id === projectState.selectedProjectId
   );
-  let content = <SelectedProject project={selectedProject} />;
+  let content = (
+    <SelectedProject
+      project={selectedProject}
+      onDelete={handleDeleteProject}
+      onAddTask={handleAddTask}
+      onDeleteTask={handleDeleteTask}
+      tasks={projectState.tasks}
+    />
+  );
   if (projectState.selectedProjectId === null) {
     content = (
       <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject} />
