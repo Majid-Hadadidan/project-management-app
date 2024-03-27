@@ -82,7 +82,7 @@ export default function App() {
     });
   }
   // Delete selected project from SelectedProject component
-  function handleDeleteProject(id) {
+  function handleDeleteProject() {
     setProjectState((prevState) => {
       return {
         ...prevState,
